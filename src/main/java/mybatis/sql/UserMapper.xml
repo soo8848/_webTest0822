@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UserMapper">
+
+<select id="selectUserById" parameterType="string" resultType="UserDto">
+        SELECT * FROM users WHERE id = #{id}
+    </select>
+
+    <!-- 사용자 ID와 비밀번호로 조회 -->
+    <select id="selectUserByIdAndPassword" parameterType="map" resultType="UserDto">
+        SELECT * FROM users WHERE id = #{id} AND password = #{password}
+    </select>
+
+    <!-- 사용자 수 조회 -->
+    <select id="countUsers" resultType="int">
+        SELECT COUNT(*) FROM users
+    </select>
+
+    <!-- 사용자 추가 -->
+    <insert id="insertUser" parameterType="UserDto">
+        INSERT INTO users (id, password, name, role, email) VALUES (#{id}, #{password}, #{name}, #{role}, #{email})
+    </insert>
+
+    <!-- 사용자 업데이트 -->
+    <update id="updateUser" parameterType="UserDto">
+        UPDATE users SET password = #{password}, name = #{name}, role = #{role}, email = #{email} WHERE userNum = #{userNum}
+    </update>
+
+    <!-- 사용자 삭제 -->
+    <delete id="deleteUser" parameterType="int">
+        DELETE FROM users WHERE userNum = #{userNum}
+    </delete>
+
+	<!-- 전체 사용자 수를 조회하는 쿼리 -->
+	<select id="getNumUsers" resultType="int">
+		SELECT COUNT(*) FROM USERS
+	</select>
+</mapper>

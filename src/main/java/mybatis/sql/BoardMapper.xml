@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BoardMapper">
+
+	<!-- 조건에 맞는 레코드 목록을 조회하는 쿼리 -->
+	<select id="selectList" resultType="com.board.db.BoardDto"
+		parameterType="map">
+    <![CDATA[
+    SELECT * FROM (
+        SELECT T1.*, ROWNUM AS RNUM
+        FROM (
+            SELECT * FROM BOARD ORDER BY NUM DESC
+        ) T1
+        WHERE ROWNUM <= #{start} + #{listSize}
+    )
+    WHERE RNUM >= #{start}
+    ]]>
+	</select>
+
+	<!-- 전체 레코드 수를 조회하는 쿼리 -->
+	<select id="getNumRecords" resultType="int">
+		SELECT COUNT(*) FROM BOARD
+	</select>
+
+
+	<!-- 특정 보드의 조회수를 증가시키는 쿼리 -->
+	<update id="updateHits" parameterType="int">
+		UPDATE BOARD SET HITS =
+		HITS + 1 WHERE NUM = #{num}
+	</update>
+
+	<!-- 특정 보드의 정보를 조회하는 쿼리 -->
+	<select id="selectOne" parameterType="int"
+		resultType="com.board.db.BoardDto">
+		SELECT * FROM BOARD WHERE NUM = #{num}
+	</select>
+
+	<!-- 특정 보드의 삭제를 수행하는 쿼리 -->
+	<delete id="deleteBoard" parameterType="int">
+		DELETE FROM BOARD WHERE
+		NUM = #{num}
+	</delete>
+
+	<!-- 새로운 보드 정보를 삽입하는 쿼리 -->
+	<insert id="insertBoard" parameterType="com.board.db.BoardDto">
+		INSERT INTO BOARD (NUM,
+		WRITER, TITLE, CONTENT, REGTIME, HITS, USERNUM)
+		VALUES (#{num},
+		#{writer}, #{title}, #{content}, #{regtime}, #{hits},
+		#{userNum})
+	</insert>
+
+	<!-- 기존 보드 정보를 업데이트하는 쿼리 -->
+	<update id="updateBoard" parameterType="com.board.db.BoardDto">
+		UPDATE BOARD
+		SET WRITER =
+		#{writer}, TITLE = #{title}, CONTENT = #{content}, REGTIME =
+		#{regtime}, HITS = #{hits}, USERNUM = #{userNum}
+		WHERE NUM = #{num}
+	</update>
+
+	<!-- 보드의 특정 조건을 카운트하는 쿼리 -->
+	<select id="countBoard" parameterType="int" resultType="int">
+		SELECT
+		COUNT(*) FROM BOARD WHERE NUM = #{num}
+	</select>
+
+</mapper>
